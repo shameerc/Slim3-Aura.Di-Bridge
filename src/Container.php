@@ -36,6 +36,7 @@ final class Container extends AuraContainer implements ContainerInterface
         'responseChunkSize' => 4096,
         'outputBuffering' => 'append',
         'determineRouteBeforeAppMiddleware' => false,
+        'displayErrorDetails' => false
     ];
 
     public function __construct($settings, $autoResolve = false)
@@ -101,8 +102,8 @@ final class Container extends AuraContainer implements ContainerInterface
             return new RequestResponse();
         });
 
-        $this->set('errorHandler', function () {
-            return new Error();
+        $this->set('errorHandler', function () use ($di) {
+            return new Error($di->get('settings')['displayErrorDetails']);
         });
 
         $this->set('notFoundHandler', function () {
